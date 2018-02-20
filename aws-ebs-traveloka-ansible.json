@@ -16,8 +16,7 @@
       "app_version": null,
       "build_time": null,
       "app_product_domain": null,
-      "working_directory": "{{ env `CODEBUILD_SRC_DIR` }}",
-      "app_target_directory": "/home/ubuntu",
+      "ansible_extra_vars": "",
       "security_group_id": "{{ env `APP_TEMPLATE_SG_ID` }}",
       "source_ami_name_filter": "{{ env `STACK_AMI_NAME_FILTER` }}",
       "source_ami_owners": "{{ env `STACK_AMI_OWNERS` }}"
@@ -67,23 +66,18 @@
         "ServiceVersion": "{{ user `app_version` }}",
         "ProductDomain": "{{ user `app_product_domain` }}",
         "AppBuildTime": "{{ user `build_time` | clean_ami_name}}",
-        "AmiBakeTime": "{{isotime | clean_ami_name}}",
+        "AmiBakeTime": "{{ isotime | clean_ami_name }}",
         "BaseAmiId": "{{ .SourceAMI }}"
       }
     }],
     "provisioners": [
-      {
-          "type": "file",
-          "source": "{{ user `app_name` }}-{{ user `app_version` }}",
-          "destination": "{{ user `app_target_directory` }}"
-      },
       {
           "type": "ansible",
           "ansible_env_vars": [ "ANSIBLE_NOCOLOR=True"],
           "playbook_file": "{{ user `app_name` }}.yml",
           "sftp_command": "/usr/libexec/openssh/sftp-server -e",
           "extra_arguments": ["--extra-vars",
-            "app_name={{ user `app_name` }} app_version={{ user `app_version` }} working_directory={{ user `working_directory` }} app_target_directory={{ user `app_target_directory` }}",
+            "app_name={{ user `app_name` }} app_version={{ user `app_version` }} {{ user `ansible_extra_vars` }}",
             "-vvv"]
       },
       {
