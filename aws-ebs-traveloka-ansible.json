@@ -79,11 +79,12 @@
       },
       {
           "type": "ansible",
-          "ansible_env_vars": [ "ANSIBLE_NOCOLOR=True" ],
+          "ansible_env_vars": [ "ANSIBLE_NOCOLOR=True"],
           "playbook_file": "{{ user `app_name` }}.yml",
+          "sftp_command": "/usr/libexec/openssh/sftp-server -e",
           "extra_arguments": ["--extra-vars",
-            "app_name={{ user `app_name` }} app_version={{ user `app_version` }} working_directory={{ user `working_directory` }} app_target_directory={{ user `app_target_directory` }}",
-            "-vv"]
+            "app_name={{ user `app_name` }} app_version={{ user `app_version` }} working_directory={{ user `working_directory` }} app_target_directory={{ user `app_target_directory` }} ansible_connection=ssh",
+            "-vvv"]
       },
       {
         "type": "shell",
