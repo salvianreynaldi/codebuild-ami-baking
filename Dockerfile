@@ -1,5 +1,5 @@
 FROM williamyeh/ansible:ubuntu16.04-onbuild
-RUN apt-get update && apt-get install -y --no-install-recommends python-pip git unzip
+RUN apt-get update && apt-get install -y --no-install-recommends python-pip git unzip sudo
 RUN pip install awscli==1.14.39
 
 ADD https://github.com/stedolan/jq/releases/download/jq-1.5/jq-linux64 /usr/local/bin/jq
