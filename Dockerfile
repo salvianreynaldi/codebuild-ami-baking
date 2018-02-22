@@ -1,4 +1,13 @@
-FROM williamyeh/ansible:ubuntu16.04-onbuild
+FROM ubuntu:xenial
+RUN echo "===> Adding Ansible's PPA..."  && \
+    echo "deb http://ppa.launchpad.net/ansible/ansible/ubuntu xenial main" | tee /etc/apt/sources.list.d/ansible.list           && \
+    echo "deb-src http://ppa.launchpad.net/ansible/ansible/ubuntu xenial main" | tee -a /etc/apt/sources.list.d/ansible.list    && \
+    apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 7BB9C367    && \
+    DEBIAN_FRONTEND=noninteractive  apt-get update  && \
+    echo "===> Installing Ansible..."  && \
+    apt-get install -y ansible=2.4.3.0-1ppa~xenial  && \
+    echo "===> Removing Ansible PPA..."  && \
+    rm -rf /var/lib/apt/lists/*  /etc/apt/sources.list.d/ansible.list
 RUN apt-get update && apt-get install -y --no-install-recommends python-pip git unzip
 RUN pip install boto3 botocore
 RUN pip install awscli==1.14.39
