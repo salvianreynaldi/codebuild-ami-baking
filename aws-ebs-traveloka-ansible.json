@@ -78,7 +78,7 @@
           "sftp_command": "/usr/libexec/openssh/sftp-server -e",
           "extra_arguments": ["--extra-vars",
             "app_name={{ user `app_name` }} app_version={{ user `app_version` }} {{ user `ansible_extra_vars` }}",
-            "-vvv"]
+            "-vv"]
       },
       {
         "type": "shell",
