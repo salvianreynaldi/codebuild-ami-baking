@@ -15,7 +15,6 @@
       "app_playbook_file": null,
       "app_name": null,
       "app_version": null,
-      "build_time": null,
       "app_product_domain": null,
       "ansible_extra_vars": "",
       "security_group_id": "{{ env `APP_TEMPLATE_SG_ID` }}",
@@ -50,8 +49,7 @@
         "ProductDomain": "{{ user `app_product_domain` }}",
         "Cluster": "{{ user `app_name` }}-app",
         "Environment": "management",
-        "Description": "{{ user `app_name` }} AMI baking instance (by Packer)",
-        "AppBuildTime": "{{ user `build_time` | clean_ami_name}}"
+        "Description": "{{ user `app_name` }} AMI baking instance (by Packer)"
       },
       "run_volume_tags": {
         "ProductDomain": "{{ user `app_product_domain` }}",
@@ -66,7 +64,6 @@
         "Service": "{{ user `app_name` }}",
         "ServiceVersion": "{{ user `app_version` }}",
         "ProductDomain": "{{ user `app_product_domain` }}",
-        "AppBuildTime": "{{ user `build_time` | clean_ami_name}}",
         "AmiBakeTime": "{{ isotime | clean_ami_name }}",
         "BaseAmiId": "{{ .SourceAMI }}"
       }
