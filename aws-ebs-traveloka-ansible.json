@@ -48,12 +48,12 @@
         "ServiceVersion": "{{ user `app_version` }}",
         "ProductDomain": "{{ user `app_product_domain` }}",
         "Cluster": "{{ user `app_name` }}-app",
-        "Environment": "management",
+        "Environment": "special",
         "Description": "{{ user `app_name` }} AMI baking instance (by Packer)"
       },
       "run_volume_tags": {
         "ProductDomain": "{{ user `app_product_domain` }}",
-        "Environment": "management"
+        "Environment": "special"
       },
       "ami_name": "tvlk/ubuntu/{{ user `app_product_domain` }}/{{ user `app_name` }}-{{ user `app_version` }}/hvm/x86_64/ebs",
       "ami_users": "{{ user `aws_target_accounts` }}",
