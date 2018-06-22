@@ -5,7 +5,7 @@ RUN echo "===> Adding Ansible's PPA..."  && \
     apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 7BB9C367    && \
     DEBIAN_FRONTEND=noninteractive  apt-get update  && \
     echo "===> Installing Ansible..."  && \
-    apt-get install -y ansible=2.4.3.0-1ppa~xenial  && \
+    apt-get install -y ansible  && \
     echo "===> Removing Ansible PPA..."  && \
     rm -rf /var/lib/apt/lists/*  /etc/apt/sources.list.d/ansible.list
 RUN apt-get update && apt-get install -y --no-install-recommends python-pip git unzip
