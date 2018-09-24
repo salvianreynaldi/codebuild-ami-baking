@@ -17,6 +17,7 @@
       "app_version": null,
       "app_product_domain": null,
       "ansible_extra_vars": "",
+      "environment_tag": "management",
       "security_group_id": "{{ env `APP_TEMPLATE_SG_ID` }}",
       "source_ami_name_filter": "{{ env `STACK_AMI_NAME_FILTER` }}",
       "source_ami_owners": "{{ env `STACK_AMI_OWNERS` }}"
@@ -43,17 +44,18 @@
         "most_recent": true
       },
       "run_tags": {
+        "Name": "{{ user `app_product_domain` }}-packer",
         "Application": "{{ user `app_type` }}",
         "Service": "{{ user `app_name` }}",
         "ServiceVersion": "{{ user `app_version` }}",
         "ProductDomain": "{{ user `app_product_domain` }}",
         "Cluster": "{{ user `app_name` }}-app",
-        "Environment": "special",
+        "Environment": "{{ user `environment_tag` }}",
         "Description": "{{ user `app_name` }} AMI baking instance (by Packer)"
       },
       "run_volume_tags": {
         "ProductDomain": "{{ user `app_product_domain` }}",
-        "Environment": "special"
+        "Environment": "{{ user `environment_tag` }}"
       },
       "ami_name": "tvlk/ubuntu/{{ user `app_product_domain` }}/{{ user `app_name` }}-{{ user `app_version` }}/hvm/x86_64/ebs",
       "ami_users": "{{ user `aws_target_accounts` }}",
