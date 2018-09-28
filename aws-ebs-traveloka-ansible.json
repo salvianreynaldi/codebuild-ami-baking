@@ -16,6 +16,7 @@
       "app_name": null,
       "app_version": null,
       "app_product_domain": null,
+      "app_role": "app",
       "ansible_extra_vars": "",
       "environment_tag": "management",
       "security_group_id": "{{ env `APP_TEMPLATE_SG_ID` }}",
@@ -48,8 +49,8 @@
         "Application": "{{ user `app_type` }}",
         "Service": "{{ user `app_name` }}",
         "ServiceVersion": "{{ user `app_version` }}",
+        "Cluster": "{{ user `app_name` }}-{{ user `app_role` }}",
         "ProductDomain": "{{ user `app_product_domain` }}",
-        "Cluster": "{{ user `app_name` }}-app",
         "Environment": "{{ user `environment_tag` }}",
         "Description": "{{ user `app_name` }} AMI baking instance (by Packer)"
       },
@@ -57,7 +58,7 @@
         "ProductDomain": "{{ user `app_product_domain` }}",
         "Environment": "{{ user `environment_tag` }}"
       },
-      "ami_name": "tvlk/ubuntu/{{ user `app_product_domain` }}/{{ user `app_name` }}-{{ user `app_version` }}/hvm/x86_64/ebs",
+      "ami_name": "tvlk/ubuntu/{{ user `app_product_domain` }}/{{ user `app_name` }}-{{ user `app_role` }}-{{ user `app_version` }}/hvm/x86_64/{{ .SourceAMI }}",
       "ami_users": "{{ user `aws_target_accounts` }}",
       "associate_public_ip_address": "{{ user `aws_associate_public_ip_address` }}",
       "sriov_support": "{{ user `aws_enhanced_networking` }}",
