@@ -1,5 +1,5 @@
 FROM ubuntu:bionic
-RUN DEBIAN_FRONTEND=noninteractive apt install -y software-properties-common && apt-add-repository ppa:ansible/ansible && \
+RUN DEBIAN_FRONTEND=noninteractive apt update && apt install -y software-properties-common && apt-add-repository ppa:ansible/ansible && \
     apt update && apt install -y ansible python-pip git unzip
 RUN pip install --upgrade pip boto3 botocore awscli
 
