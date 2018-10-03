@@ -1,101 +1,108 @@
 {
-    "variables": {
-      "aws_access_key": "",
-      "aws_secret_key": "",
-      "aws_subnet_id": "{{ env `APP_TEMPLATE_INSTANCE_SUBNET_ID` }}",
-      "aws_vpc_id": "{{ env `APP_TEMPLATE_INSTANCE_VPC_ID` }}",
-      "aws_region": "{{ env `AWS_REGION` }}",
-      "aws_ssh_username": "ubuntu",
-      "aws_instance_type": "t2.small",
-      "aws_instance_profile": "{{ env `APP_TEMPLATE_INSTANCE_PROFILE` }}",
-      "aws_target_accounts": "",
-      "aws_associate_public_ip_address": "true",
-      "aws_enhanced_networking": "false",
-      "app_type": null,
-      "app_playbook_file": null,
-      "app_name": null,
-      "app_version": null,
-      "app_product_domain": null,
-      "app_role": "app",
-      "ansible_extra_vars": "",
-      "environment_tag": "management",
-      "security_group_id": "{{ env `APP_TEMPLATE_SG_ID` }}",
-      "source_ami_name_filter": "{{ env `STACK_AMI_NAME_FILTER` }}",
-      "source_ami_owners": "{{ env `STACK_AMI_OWNERS` }}"
-    },
-    "builders": [{
-      "type": "amazon-ebs",
+  "builders": [
+    {
       "access_key": "{{ user `aws_access_key` }}",
-      "secret_key": "{{ user `aws_secret_key` }}",
-      "subnet_id": "{{ user `aws_subnet_id` }}",
-      "vpc_id": "{{ user `aws_vpc_id` }}",
-      "security_group_id": "{{ user `security_group_id` }}",
-      "region": "{{ user `aws_region` }}",
-      "ssh_username": "{{ user `aws_ssh_username` }}",
-      "ssh_pty": true,
-      "instance_type": "{{ user `aws_instance_type` }}",
+      "ami_name": "tvlk/ubuntu/{{ user `app_product_domain` }}/{{ user `app_name` }}-{{ user `app_role` }}-{{ user `app_version` }}/hvm/x86_64/{{ timestamp }}",
+      "ami_users": "{{ user `aws_target_accounts` }}",
+      "associate_public_ip_address": "{{ user `aws_associate_public_ip_address` }}",
       "iam_instance_profile": "{{ user `aws_instance_profile` }}",
+      "instance_type": "{{ user `aws_instance_type` }}",
+      "region": "{{ user `aws_region` }}",
+      "run_tags": {
+        "Application": "{{ user `app_type` }}",
+        "Cluster": "{{ user `app_name` }}-{{ user `app_role` }}",
+        "Description": "{{ user `app_name` }} AMI baking instance (by Packer)",
+        "Environment": "{{ user `environment_tag` }}",
+        "Name": "{{ user `app_product_domain` }}-packer",
+        "ProductDomain": "{{ user `app_product_domain` }}",
+        "Service": "{{ user `app_name` }}",
+        "ServiceVersion": "{{ user `app_version` }}"
+      },
+      "run_volume_tags": {
+        "Environment": "{{ user `environment_tag` }}",
+        "ProductDomain": "{{ user `app_product_domain` }}"
+      },
+      "secret_key": "{{ user `aws_secret_key` }}",
+      "security_group_id": "{{ user `security_group_id` }}",
       "source_ami_filter": {
         "filters": {
           "name": "{{ user `source_ami_name_filter` }}",
-          "virtualization-type": "hvm",
-          "root-device-type": "ebs"
+          "root-device-type": "ebs",
+          "virtualization-type": "hvm"
         },
-        "owners": "{{ user `source_ami_owners` }}",
-        "most_recent": true
+        "most_recent": true,
+        "owners": "{{ user `source_ami_owners` }}"
       },
-      "run_tags": {
-        "Name": "{{ user `app_product_domain` }}-packer",
-        "Application": "{{ user `app_type` }}",
-        "Service": "{{ user `app_name` }}",
-        "ServiceVersion": "{{ user `app_version` }}",
-        "Cluster": "{{ user `app_name` }}-{{ user `app_role` }}",
-        "ProductDomain": "{{ user `app_product_domain` }}",
-        "Environment": "{{ user `environment_tag` }}",
-        "Description": "{{ user `app_name` }} AMI baking instance (by Packer)"
-      },
-      "run_volume_tags": {
-        "ProductDomain": "{{ user `app_product_domain` }}",
-        "Environment": "{{ user `environment_tag` }}"
-      },
-      "ami_name": "tvlk/ubuntu/{{ user `app_product_domain` }}/{{ user `app_name` }}-{{ user `app_role` }}-{{ user `app_version` }}/hvm/x86_64/{{ .SourceAMI }}",
-      "ami_users": "{{ user `aws_target_accounts` }}",
-      "associate_public_ip_address": "{{ user `aws_associate_public_ip_address` }}",
       "sriov_support": "{{ user `aws_enhanced_networking` }}",
+      "ssh_pty": true,
+      "ssh_username": "{{ user `aws_ssh_username` }}",
+      "subnet_id": "{{ user `aws_subnet_id` }}",
       "tags": {
-        "Application": "{{ user `app_type` }}",
-        "Service": "{{ user `app_name` }}",
-        "ServiceVersion": "{{ user `app_version` }}",
-        "ProductDomain": "{{ user `app_product_domain` }}",
         "AmiBakeTime": "{{ isotime | clean_ami_name }}",
-        "BaseAmiId": "{{ .SourceAMI }}"
-      }
-    }],
-    "provisioners": [
-      {
-          "type": "ansible",
-          "ansible_env_vars": [ "ANSIBLE_NOCOLOR=True"],
-          "playbook_file": "{{ user `app_playbook_file` }}",
-          "sftp_command": "/usr/libexec/openssh/sftp-server -e",
-          "extra_arguments": ["--extra-vars",
-            "{{ user `ansible_extra_vars` }}",
-            "-vv"]
+        "Application": "{{ user `app_type` }}",
+        "BaseAmiId": "{{ .SourceAMI }}",
+        "Name": "tvlk/ubuntu/{{ user `app_product_domain` }}/{{ user `app_name` }}-{{ user `app_role` }}-{{ user `app_version` }}/hvm/x86_64/{{ timestamp }}",
+        "ProductDomain": "{{ user `app_product_domain` }}",
+        "Service": "{{ user `app_name` }}",
+        "ServiceVersion": "{{ user `app_version` }}"
       },
-      {
-        "type": "shell",
-        "inline": [
-          "sudo apt-get -y autoremove",
-          "sudo apt-get -y clean",
-          "sudo apt-get -y autoclean",
-          "rm -rf ~/.ssh/ ~/.bash_history",
-          "sudo rm -rf /root/.ssh/ /root/.bash_history",
-          "sudo find /var/log/ -type f -delete"
-        ]
-      }
-    ],
-    "post-processors": [
-      {
-        "type": "manifest"
-      }
-    ]
+      "type": "amazon-ebs",
+      "vpc_id": "{{ user `aws_vpc_id` }}"
+    }
+  ],
+  "post-processors": [
+    {
+      "type": "manifest"
+    }
+  ],
+  "provisioners": [
+    {
+      "ansible_env_vars": [
+        "ANSIBLE_NOCOLOR=True"
+      ],
+      "extra_arguments": [
+        "--extra-vars",
+        "{{ user `ansible_extra_vars` }}",
+        "-vv"
+      ],
+      "playbook_file": "{{ user `app_playbook_file` }}",
+      "sftp_command": "/usr/libexec/openssh/sftp-server -e",
+      "type": "ansible"
+    },
+    {
+      "inline": [
+        "sudo apt-get -y autoremove",
+        "sudo apt-get -y clean",
+        "sudo apt-get -y autoclean",
+        "rm -rf ~/.ssh/ ~/.bash_history",
+        "sudo rm -rf /root/.ssh/ /root/.bash_history",
+        "sudo find /var/log/ -type f -delete"
+      ],
+      "type": "shell"
+    }
+  ],
+  "variables": {
+    "ansible_extra_vars": "",
+    "app_name": null,
+    "app_playbook_file": null,
+    "app_product_domain": null,
+    "app_role": "app",
+    "app_type": null,
+    "app_version": null,
+    "aws_access_key": "",
+    "aws_associate_public_ip_address": "true",
+    "aws_enhanced_networking": "false",
+    "aws_instance_profile": "{{ env `APP_TEMPLATE_INSTANCE_PROFILE` }}",
+    "aws_instance_type": "t2.small",
+    "aws_region": "{{ env `AWS_REGION` }}",
+    "aws_secret_key": "",
+    "aws_ssh_username": "ubuntu",
+    "aws_subnet_id": "{{ env `APP_TEMPLATE_INSTANCE_SUBNET_ID` }}",
+    "aws_target_accounts": "",
+    "aws_vpc_id": "{{ env `APP_TEMPLATE_INSTANCE_VPC_ID` }}",
+    "environment_tag": "management",
+    "security_group_id": "{{ env `APP_TEMPLATE_SG_ID` }}",
+    "source_ami_name_filter": "{{ env `STACK_AMI_NAME_FILTER` }}",
+    "source_ami_owners": "{{ env `STACK_AMI_OWNERS` }}"
   }
+}
