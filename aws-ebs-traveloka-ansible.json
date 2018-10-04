@@ -2,7 +2,7 @@
   "builders": [
     {
       "access_key": "{{ user `aws_access_key` }}",
-      "ami_name": "tvlk/ubuntu/{{ user `app_product_domain` }}/{{ user `app_name` }}-{{ user `app_role` }}-{{ user `app_version` }}/hvm/x86_64/{{ timestamp }}",
+      "ami_name": "{{ user `ami_name_prefix` }}{{ user `app_name` }}-{{ user `app_role` }}-{{ user `app_version` }}{{ user `ami_name_suffix` }}/{{ timestamp }}",
       "ami_users": "{{ user `aws_target_accounts` }}",
       "associate_public_ip_address": "{{ user `aws_associate_public_ip_address` }}",
       "iam_instance_profile": "{{ user `aws_instance_profile` }}",
@@ -41,10 +41,11 @@
         "AmiBakeTime": "{{ isotime | clean_ami_name }}",
         "Application": "{{ user `app_type` }}",
         "BaseAmiId": "{{ .SourceAMI }}",
-        "Name": "tvlk/ubuntu/{{ user `app_product_domain` }}/{{ user `app_name` }}-{{ user `app_role` }}-{{ user `app_version` }}/hvm/x86_64/{{ timestamp }}",
+        "Name": "{{ user `ami_name_prefix` }}{{ user `app_name` }}-{{ user `app_role` }}-{{ user `app_version` }}{{ user `ami_name_suffix` }}/{{ timestamp }}",
         "ProductDomain": "{{ user `app_product_domain` }}",
         "Service": "{{ user `app_name` }}",
-        "ServiceVersion": "{{ user `app_version` }}"
+        "ServiceVersion": "{{ user `app_version` }}",
+        "Stage": "Alpha"
       },
       "type": "amazon-ebs",
       "vpc_id": "{{ user `aws_vpc_id` }}"
@@ -100,6 +101,8 @@
     "aws_subnet_id": "{{ env `APP_TEMPLATE_INSTANCE_SUBNET_ID` }}",
     "aws_target_accounts": "",
     "aws_vpc_id": "{{ env `APP_TEMPLATE_INSTANCE_VPC_ID` }}",
+    "ami_name_prefix": "{{ env `AMI_NAME_PREFIX` }}",
+    "ami_name_suffix": "/hvm/x86_64",
     "environment_tag": "management",
     "security_group_id": "{{ env `APP_TEMPLATE_SG_ID` }}",
     "source_ami_name_filter": "{{ env `STACK_AMI_NAME_FILTER` }}",
