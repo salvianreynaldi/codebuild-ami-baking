@@ -43,6 +43,7 @@
         "BaseAmiId": "{{ .SourceAMI }}",
         "Name": "{{ user `ami_name_prefix` }}{{ user `app_name` }}-{{ user `app_role` }}-{{ user `app_version` }}{{ user `ami_name_suffix` }}/{{ timestamp }}",
         "ProductDomain": "{{ user `app_product_domain` }}",
+        "Environment": "management",
         "Service": "{{ user `app_name` }}",
         "ServiceVersion": "{{ user `app_version` }}",
         "Stage": "Alpha"
@@ -59,12 +60,12 @@
   "provisioners": [
     {
       "ansible_env_vars": [
-        "ANSIBLE_NOCOLOR=True"
+        "ANSIBLE_NOCOLOR=True",
+        "ANSIBLE_PYTHON_INTERPRETER=/usr/bin/python"
       ],
       "extra_arguments": [
         "--extra-vars",
-        "{{ user `ansible_extra_vars` }}",
-        "-vv"
+        "{{ user `ansible_extra_vars` }}"
       ],
       "playbook_file": "{{ user `app_playbook_file` }}",
       "sftp_command": "/usr/libexec/openssh/sftp-server -e",
@@ -94,7 +95,7 @@
     "aws_associate_public_ip_address": "true",
     "aws_enhanced_networking": "false",
     "aws_instance_profile": "{{ env `APP_TEMPLATE_INSTANCE_PROFILE` }}",
-    "aws_instance_type": "t2.small",
+    "aws_instance_type": "t3.nano",
     "aws_region": "{{ env `AWS_REGION` }}",
     "aws_secret_key": "",
     "aws_ssh_username": "ubuntu",
