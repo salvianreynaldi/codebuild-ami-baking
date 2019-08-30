@@ -43,6 +43,7 @@
         "BaseAmiId": "{{ .SourceAMI }}",
         "Name": "{{ user `ami_name_prefix` }}{{ user `app_name` }}-{{ user `app_role` }}-{{ user `app_version` }}{{ user `ami_name_suffix` }}/{{ timestamp }}",
         "ProductDomain": "{{ user `app_product_domain` }}",
+        "Environment": "management",
         "Service": "{{ user `app_name` }}",
         "ServiceVersion": "{{ user `app_version` }}",
         "Stage": "Alpha"
@@ -63,8 +64,7 @@
       ],
       "extra_arguments": [
         "--extra-vars",
-        "{{ user `ansible_extra_vars` }}",
-        "-vv"
+        "{{ user `ansible_extra_vars` }}"
       ],
       "playbook_file": "{{ user `app_playbook_file` }}",
       "sftp_command": "/usr/libexec/openssh/sftp-server -e",
