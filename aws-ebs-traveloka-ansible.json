@@ -76,9 +76,20 @@
         "sudo apt-get -y autoremove",
         "sudo apt-get -y clean",
         "sudo apt-get -y autoclean",
+        "sudo service stop datadog-agent",
+        "sudo service stop awslogs",
+        "sudo [ -f /home/ubuntu/.ssh/authorized_keys ]",
+        "[ -f /root/.bash_history ]",
+        "[ -f /home/ubuntu/.bash_history ]",
         "rm -rf ~/.ssh/ ~/.bash_history",
         "sudo rm -rf /root/.ssh/ /root/.bash_history",
-        "sudo find /var/log/ -type f -delete"
+        "sudo find /var/log/ -type f -delete",
+        "sudo rm -Rf /var/log/awslogs/*",
+        "sudo rm -Rf /var/log/datadog/*",
+        "sudo rm -Rf /var/awslogs/state/agent-state",
+        "sudo rm -Rf /var/awslogs/state/awslogs.lock",
+        "sudo rm -Rf /var/awslogs/state/awslogs.pid"
+
       ],
       "type": "shell"
     }
