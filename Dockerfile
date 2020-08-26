@@ -1,6 +1,6 @@
-FROM ubuntu:bionic
-RUN DEBIAN_FRONTEND=noninteractive apt update && apt install -y --no-install-recommends software-properties-common python-pip git unzip && apt-add-repository ppa:ansible/ansible && \
-    apt update && apt install -y ansible
+FROM debian:buster-slim
+RUN DEBIAN_FRONTEND=noninteractive apt update && apt install -y --no-install-recommends software-properties-common git python-pip unzip && apt-add-repository ppa:ansible/ansible && \
+    apt install -y ansible
 RUN pip install --upgrade pip boto3 botocore awscli
 
 ADD https://github.com/stedolan/jq/releases/download/jq-1.5/jq-linux64 /usr/local/bin/jq
